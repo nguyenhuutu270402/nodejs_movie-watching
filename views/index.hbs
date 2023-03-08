@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Comic Reading</title>
+    <style>
+        body {
+            background-color: #f1f1f1;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin: 20px auto;
+            width: 70%;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 20px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        td.tentruyen {
+            text-transform: uppercase;
+        }
+
+        form {
+            display: flex;
+            justify-content: center;
+            margin: 20px;
+        }
+
+        input[type="text"] {
+            padding: 8px;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        button[type="submit"] {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            align-content: flex-end;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #3e8e41;
+        }
+
+        .btn {
+            margin: 10px 15% 0 15%;
+        }
+
+        td a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        img {
+            width: 100px;
+            height: 150px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="body_index2">
+        <div class="header_index2">
+            <div class="headr_logo">
+                <img
+                    src="https://yt3.googleusercontent.com/ytc/AL5GRJWNFkKQnRDA04U8Kwp6hryPKEVdskQzvWAtLs1X=s900-c-k-c0x00ffffff-no-rj" />
+                <h2>Comic Reading</h2>
+            </div>
+            <div class="header_account">
+                <img src="{{user.avatar}}" />
+                <p class="mt-3">{{user.tennguoidung}}</p>
+                <a href="/logout"><button>Log out</button></a>
+            </div>
+        </div>
+
+        <!-- Tab link -->
+        <ul class="menu-list">
+            <a onclick="redicrectHome('{{user._id}}')" class="tablinks" style="color: red;
+            border-bottom: 2px solid red;">
+                <li>Truyện</li>
+            </a>
+            <a href="/the-loai" class="tablinks">
+                <li>Thể loại</li>
+            </a>
+            <a href="/tac-gia" class="tablinks">
+                <li>Tác giả</li>
+            </a>
+            <a href="/nguoi-dung" class="tablinks">
+                <li>Người dùng</li>
+            </a>
+        </ul>
+
+        <body>
+            <button onclick="them()" class="btn" type="submit">Thêm</button>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên truyện</th>
+                        <th>Tên khác</th>
+                        <th>Tình trạng</th>
+                        <th>Image</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each listTruyen}}
+                    <tr>
+                        <td>{{id}}</td>
+                        <td class="tentruyen"><a href="/update-truyen/{{id}}">{{tentruyen}}</a></td>
+                        <td><a href="/update-truyen/{{id}}">{{mota}}</a></td>
+                        <td><a href="/update-truyen/{{id}}">{{tinhtrang}}</a></td>
+                        <td>
+                            <a href="/update-truyen/{{id}}">
+                                <img src={{imagelink}} />
+                            </a>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+
+    </div>
+    <script>
+        function them() {
+            window.location.href = "/add-truyen";
+        }
+    </script>
+</body>
