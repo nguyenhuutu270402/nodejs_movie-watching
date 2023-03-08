@@ -3,11 +3,11 @@ require('dotenv').config();
 const { Pool } = require('pg');
 
 const connection = new Pool({
-    user: 'upqpbfs5dbfgpfodl4qj',
-    host: 'bqcmqdzwlgoreh8cevsr-postgresql.services.clever-cloud.com',
-    database: 'bqcmqdzwlgoreh8cevsr',
-    password: '61q7mu09pkYobFBI1tjDmyKXxXXY3P',
-    port: 5432,
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_DATABASE,
+    password: process.env.DB_PASSWORD,
+    port: process.env.DB_PORT,
 });
 
 connection.connect(function (err, connection) {
