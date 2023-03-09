@@ -104,7 +104,7 @@
         <ul class="menu-list">
             <a href="/" class="tablinks" style="color: red;
             border-bottom: 2px solid red;">
-                <li>Truyện</li>
+                <li>Phim</li>
             </a>
             <a href="/the-loai" class="tablinks">
                 <li>Thể loại</li>
@@ -119,11 +119,11 @@
         <div class="container">
             <button onclick="chuong('{{truyen.id}}')" class="btn" type="submit">Chương</button>
 
-            <h2>Sửa truyện</h2>
+            <h2>Sửa Phim</h2>
             <form action="/post-update-truyen" method="post" enctype="multipart/form-data">
                 <label for="id">ID</label>
                 <input type="text" id="id" name="id" value={{truyen.id}} required readonly>
-                <label for="tentruyen">Tên truyện:</label>
+                <label for="tentruyen">Tên Phim:</label>
                 <input type="text" id="tentruyen" name="tentruyen" value="{{truyen.tentruyen}}" required>
                 <label for="tenkhac">Tên khác:</label>
                 <input type="text" id="tenkhac" name="tenkhac" value="{{truyen.tenkhac}}">

@@ -58,7 +58,7 @@ const controller = {
                     user = results.rows[0];
                     const qr1 = `SELECT phim.*, 
             CASE WHEN dinhdang = 0 THEN 'Phim lẻ' ELSE 'Phim bộ' END AS dinhdang_text, 
-            CASE WHEN trangthai = 1 THEN 'Đang phát' WHEN trangthai = 2 THEN 'Hoàn thành' WHEN trangthai = 3 THEN 'Ngừng chiếu' ELSE '' END AS trangthai_text
+            CASE WHEN trangthai = 1 THEN 'Đang chiếu' WHEN trangthai = 2 THEN 'Hoàn thành' WHEN trangthai = 3 THEN 'Ngừng hoạt động' ELSE '' END AS trangthai_text
             FROM phim;`;
                     database.query(qr1, (err, results) => {
                         if (err) {
@@ -423,49 +423,64 @@ const controller = {
 
 
 
-
-
-
-
-
-
-
-
-    getAddTruyen: async (req, res) => {
+    getAddPhim: async (req, res) => {
         try {
             let user = {};
-            let listTacGia = [];
+            let listDaoDien = [];
+            let listDienVien = [];
             let listTheLoai = [];
+            let listChatLuong = [
+                {
+                    "value": 1,
+                    "option": "360p",
+                    "selected": null
+                },
+                {
+                    "value": 2,
+                    "option": "720p",
+                    "selected": null
+                },
+                {
+                    "value": 3,
+                    "option": "1080p",
+                    "selected": null
+                },
+                {
+                    "value": 4,
+                    "option": "1440p",
+                    "selected": null
+                },
+                {
+                    "value": 5,
+                    "option": "2160p",
+                    "selected": null
+                }
+            ];
+            // Thực hiện các truy vấn lần lượt và chờ kết quả trả về bằng Promise và await
+            const result1 = await database.query("SELECT * FROM daodien ORDER BY tendaodien");
+            listDaoDien = result1.rows;
 
-            var qr1 = "SELECT * from tacgia order by tentacgia";
-            database.query(qr1, (err, results) => {
-                if (err) {
-                    res.status(500).json({ message: err.message });
-                } else {
-                    listTacGia = results;
-                }
-            });
-            var qr2 = "SELECT * from theloai order by tentheloai;";
-            database.query(qr2, (err, results) => {
-                if (err) {
-                    res.status(500).json({ message: err.message });
-                } else {
-                    listTheLoai = results;
-                }
-            });
-            database.query("SELECT id, email, tennguoidung, avatar FROM nguoidung WHERE id = ?", [global.idNguoiDung], (err, results) => {
-                if (err) {
-                    res.status(500).json({ message: err.message });
-                } else if (results.length > 0) {
-                    user = results[0];
-                    res.render('addtruyen', { user: user, listTacGia: listTacGia, listTheLoai: listTheLoai });
-                }
-            });
+            const result2 = await database.query("SELECT * FROM dienvien ORDER BY tendienvien");
+            listDienVien = result2.rows;
+
+            const result3 = await database.query("SELECT * FROM theloai ORDER BY tentheloai");
+            listTheLoai = result3.rows;
+
+            const result4 = await database.query("SELECT id, email, tennguoidung, avatar FROM nguoidung WHERE id = $1", [global.idNguoiDung]);
+            user = result4.rows[0];
+
+            res.render('addphim', { user: user, listDaoDien: listDaoDien, listDienVien: listDienVien, listTheLoai: listTheLoai, listChatLuong: listChatLuong });
         } catch (error) {
             res.status(500).json(error);
+            console.log(error);
         }
     },
-    getUpdateTruyen: async (req, res) => {
+
+
+
+
+
+    getUpdatePhim: async (req, res) => {
         try {
             let user = {};
             let truyen = {};
@@ -474,7 +489,7 @@ const controller = {
             let tinhtrangs = [
                 {
                     "value": 1,
-                    "option": "Đang tiến hành",
+                    "option": "Đang chiếu",
                     "selected": null
                 },
                 {

@@ -90,14 +90,14 @@
             <a href="/the-loai" class="tablinks">
                 <li>Thể loại</li>
             </a>
-            <a href="/dao-dien">
+            <a href="/dao-dien" class="tablinks">
                 <li>Đạo diễn</li>
             </a>
-            <a href="/dien-vien" class="tablinks" class="tablinks" style="color: red;
-            border-bottom: 2px solid red;">
+            <a href="/dien-vien" class="tablinks">
                 <li>Diễn viên</li>
             </a>
-            <a href="/quoc-gia" class="tablinks">
+            <a href="/quoc-gia" class="tablinks" style="color: red;
+            border-bottom: 2px solid red;">
                 <li>Quốc gia</li>
             </a>
             <a href="/nguoi-dung" class="tablinks">
@@ -106,11 +106,13 @@
         </ul>
 
         <div class="container">
-            <h2>Thêm diễn viên</h2>
-            <form action="/post-add-dien-vien" method="post">
-                <label for="tendienvien">Tên diễn viên:</label>
-                <input type="text" id="tendienvien" name="tendienvien" required>
-                <button type="submit">Thêm</button>
+            <h2>Sửa quốc gia</h2>
+            <form action="/post-update-quoc-gia" method="post">
+                <label for="id">ID:</label>
+                <input type="text" id="id" name="id" value="{{quocgia.id}}" readonly required>
+                <label for="tenquocgia">Tên quốc gia:</label>
+                <input type="text" id="tenquocgia" name="tenquocgia" value="{{quocgia.tenquocgia}}" required>
+                <button type="submit">Lưu</button>
             </form>
         </div>
 

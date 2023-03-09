@@ -56,8 +56,8 @@ router.post('/post-add-the-loai', [authentication.checkLogin], controller.postAd
 router.get('/update-the-loai/:id', [authentication.checkLogin], controller.getUpdateTheLoai);
 router.post('/post-update-the-loai', [authentication.checkLogin], controller.postUpdateTheLoai);
 
-router.get('/add-truyen', [authentication.checkLogin], controller.getAddTruyen);
-router.post('/post-add-truyen', [authentication.checkLogin, upload.single('image')], async (req, res) => {
+router.get('/add-phim', [authentication.checkLogin], controller.getAddPhim);
+router.post('/post-add-phim', [authentication.checkLogin, upload.single('image')], async (req, res) => {
   try {
     // Get the uploaded file
     const file = req.file;
@@ -65,7 +65,7 @@ router.post('/post-add-truyen', [authentication.checkLogin, upload.single('image
     // Upload file to Firebase Storage
     const bucket = firebase.storage().bucket();
     const firebaseFileName = `${Date.now()}_${file.originalname}`;
-    const firebaseFile = bucket.file(`truyen/${firebaseFileName}`);
+    const firebaseFile = bucket.file(`phim/${firebaseFileName}`);
     const fileStream = firebaseFile.createWriteStream();
     fileStream.end(file.buffer);
     await new Promise((resolve, reject) => {
@@ -76,7 +76,7 @@ router.post('/post-add-truyen', [authentication.checkLogin, upload.single('image
     // Get public URL for the uploaded file
     const [url] = await firebaseFile.getSignedUrl({ action: 'read', expires: '01-01-2500' });
 
-    // them truyen
+    // them phim
     const { tentruyen, tenkhac, mota, tacgias, theloais } = req.body;
     database.query("INSERT INTO truyen (tentruyen, tenkhac, tinhtrang, mota, imagelink) VALUES (? , ?, 1, ?, ?)", [tentruyen, tenkhac, mota, url], (err, results) => {
       if (err) {
@@ -106,11 +106,11 @@ router.post('/post-add-truyen', [authentication.checkLogin, upload.single('image
     });
     res.redirect('/');
   } catch (error) {
-    console.error(error);
+    console.log(error);
     res.status(500).send('An error occurred while uploading the image.');
   }
 });
-router.get('/update-truyen/:id', [authentication.checkLogin], controller.getUpdateTruyen);
+router.get('/update-truyen/:id', [authentication.checkLogin], controller.getUpdatePhim);
 router.post('/post-update-truyen', [authentication.checkLogin, upload.single('image')], async (req, res) => {
   try {
     if (req.file == undefined) {
