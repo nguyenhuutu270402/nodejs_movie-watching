@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Comic Reading</title>
+    <title>Movie Watching</title>
     <style>
         body {
             background-color: #f1f1f1;
@@ -22,14 +22,13 @@
             border: 1px solid #ddd;
             padding: 8px;
             text-align: center;
-            padding: 20px;
+
         }
 
         th {
-            background-color: #4CAF50;
+            background-color: #3c4eb2;
             color: #fff;
             padding: 20px;
-
         }
 
         tr:nth-child(even) {
@@ -59,7 +58,7 @@
         }
 
         button[type="submit"] {
-            background-color: #4CAF50;
+            background-color: #3c4eb2;
             border: none;
             color: white;
             padding: 8px 16px;
@@ -68,10 +67,11 @@
             font-size: 16px;
             border-radius: 4px;
             cursor: pointer;
+            align-content: flex-end;
         }
 
         button[type="submit"]:hover {
-            background-color: #3e8e41;
+            background-color: #273688;
         }
 
         .btn {
@@ -82,6 +82,12 @@
             text-decoration: none;
             color: #333;
         }
+
+        img {
+            width: 100px;
+            height: 150px;
+            object-fit: cover;
+        }
     </style>
 </head>
 
@@ -90,9 +96,8 @@
     <div class="body_index2">
         <div class="header_index2">
             <div class="headr_logo">
-                <img
-                    src="https://yt3.googleusercontent.com/ytc/AL5GRJWNFkKQnRDA04U8Kwp6hryPKEVdskQzvWAtLs1X=s900-c-k-c0x00ffffff-no-rj" />
-                <h2>Comic Reading</h2>
+                <img src="https://icon-library.com/images/free-movies-icon/free-movies-icon-16.jpg" />
+                <h2>Movie Watching</h2>
             </div>
             <div class="header_account">
                 <img src="{{user.avatar}}" />
@@ -110,35 +115,44 @@
             <a href="/the-loai" class="tablinks">
                 <li>Thể loại</li>
             </a>
-            <a href="/tac-gia" class="tablinks">
-                <li>Tác giả</li>
+            <a href="/dao-dien" class="tablinks">
+                <li>Đạo diễn</li>
             </a>
-            <a class="tablinks" href="/nguoi-dung">
+            <a href="/dien-vien" class="tablinks">
+                <li>Diễn viên</li>
+            </a>
+            <a href="/quoc-gia" class="tablinks">
+                <li>Quốc gia</li>
+            </a>
+            <a href="/nguoi-dung" class="tablinks">
                 <li>Người dùng</li>
             </a>
         </ul>
 
         <body>
 
-            <button onclick="them('{{idTruyen}}')" class="btn" type="submit">Thêm</button>
+            <button onclick="them('{{idPhim}}')" class="btn" type="submit">Thêm</button>
             <table>
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Tên chương</th>
-                        <th>Chương số</th>
+                        <th>Tên tập</th>
+                        <th>Tập số</th>
                         <th>Phim</th>
+                        <th>Video</th>
                         <th>Ngày cập nhật</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {{#each listChuong}}
+                    {{#each listTap}}
                     <tr>
                         <td>{{id}}</td>
-                        <td><a href="/update-truyen/{{idtruyen}}/update-chuong/{{id}}">{{tenchuong}}</a></td>
-                        <td>{{sochuong}}</td>
-                        <td>{{tentruyen}}</td>
-                        <td>{{moment ngaycapnhat "HH:mm DD/MM/YYYY"}}</td>
+                        <td><a href="/update-phim/{{idphim}}/update-tap/{{id}}">{{tentap}}</a></td>
+                        <td><a href="/update-phim/{{idphim}}/update-tap/{{id}}">{{tapso}}</a></td>
+                        <td><a href="/update-phim/{{idphim}}/update-tap/{{id}}">{{tenphim}}</a></td>
+                        <td><a href="/update-phim/{{idphim}}/update-tap/{{id}}">{{video}}</a></td>
+                        <td><a href="/update-phim/{{idphim}}/update-tap/{{id}}">{{moment ngaycapnhat "HH:mm
+                                DD/MM/YYYY"}}</a></td>
                     </tr>
                     {{/each}}
                 </tbody>
@@ -146,8 +160,8 @@
 
     </div>
     <script>
-        function them(idTruyen) {
-            window.location.href = `/update-truyen/${idTruyen}/add-chuong`;
+        function them(idPhim) {
+            window.location.href = `/update-phim/${idPhim}/add-tap`;
         }
     </script>
 </body>

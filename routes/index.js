@@ -92,7 +92,7 @@ router.post('/post-add-phim', [authentication.checkLogin, upload.single('image')
     // tại vì nếu list id trả về chỉ có 1 phần tử nên nó tự biến thành số. nên cần kiểm tra xem nó có phải là số hay không để thêm dữ liệu vào
     if (isNaN(daodiens) == false) {
       await database.query(`INSERT INTO ct_daodien (idphim, iddaodien) VALUES (${idphim}, ${daodiens})`);
-    } else {
+    } else if (daodiens != undefined) {
       for (const iddaodien of daodiens) {
         await database.query(`INSERT INTO ct_daodien (idphim, iddaodien) VALUES (${idphim}, ${iddaodien})`);
       }
@@ -100,7 +100,7 @@ router.post('/post-add-phim', [authentication.checkLogin, upload.single('image')
 
     if (isNaN(dienviens) == false) {
       await database.query(`INSERT INTO ct_dienvien (idphim, iddienvien) VALUES (${idphim}, ${dienviens})`);
-    } else {
+    } else if (dienviens != undefined) {
       for (const iddienvien of dienviens) {
         await database.query(`INSERT INTO ct_dienvien (idphim, iddienvien) VALUES (${idphim}, ${iddienvien})`);
       }
@@ -108,7 +108,7 @@ router.post('/post-add-phim', [authentication.checkLogin, upload.single('image')
 
     if (isNaN(quocgias) == false) {
       await database.query(`INSERT INTO ct_quocgia (idphim, idquocgia) VALUES (${idphim}, ${quocgias})`);
-    } else {
+    } else if (quocgias != undefined) {
       for (const idquocgia of quocgias) {
         await database.query(`INSERT INTO ct_quocgia (idphim, idquocgia) VALUES (${idphim}, ${idquocgia})`);
       }
@@ -116,7 +116,7 @@ router.post('/post-add-phim', [authentication.checkLogin, upload.single('image')
 
     if (isNaN(theloais) == false) {
       await database.query(`INSERT INTO ct_theloai (idphim, idtheloai) VALUES (${idphim}, ${theloais})`);
-    } else {
+    } else if (theloais != undefined) {
       for (const idtheloai of theloais) {
         await database.query(`INSERT INTO ct_theloai (idphim, idtheloai) VALUES (${idphim}, ${idtheloai})`);
       }
@@ -147,7 +147,7 @@ router.post('/post-update-phim', [authentication.checkLogin, upload.single('imag
       // tại vì nếu list id trả về chỉ có 1 phần tử nên nó tự biến thành số. nên cần kiểm tra xem nó có phải là số hay không để thêm dữ liệu vào
       if (isNaN(daodiens) == false) {
         await database.query(`INSERT INTO ct_daodien (idphim, iddaodien) VALUES (${id}, ${daodiens})`);
-      } else {
+      } else if (daodiens != undefined) {
         for (const iddaodien of daodiens) {
           await database.query(`INSERT INTO ct_daodien (idphim, iddaodien) VALUES (${id}, ${iddaodien})`);
         }
@@ -155,7 +155,7 @@ router.post('/post-update-phim', [authentication.checkLogin, upload.single('imag
 
       if (isNaN(dienviens) == false) {
         await database.query(`INSERT INTO ct_dienvien (idphim, iddienvien) VALUES (${id}, ${dienviens})`);
-      } else {
+      } else if (dienviens != undefined) {
         for (const iddienvien of dienviens) {
           await database.query(`INSERT INTO ct_dienvien (idphim, iddienvien) VALUES (${id}, ${iddienvien})`);
         }
@@ -163,7 +163,7 @@ router.post('/post-update-phim', [authentication.checkLogin, upload.single('imag
 
       if (isNaN(quocgias) == false) {
         await database.query(`INSERT INTO ct_quocgia (idphim, idquocgia) VALUES (${id}, ${quocgias})`);
-      } else {
+      } else if (quocgias != undefined) {
         for (const idquocgia of quocgias) {
           await database.query(`INSERT INTO ct_quocgia (idphim, idquocgia) VALUES (${id}, ${idquocgia})`);
         }
@@ -171,7 +171,7 @@ router.post('/post-update-phim', [authentication.checkLogin, upload.single('imag
 
       if (isNaN(theloais) == false) {
         await database.query(`INSERT INTO ct_theloai (idphim, idtheloai) VALUES (${id}, ${theloais})`);
-      } else {
+      } else if (theloais != undefined) {
         for (const idtheloai of theloais) {
           await database.query(`INSERT INTO ct_theloai (idphim, idtheloai) VALUES (${id}, ${idtheloai})`);
         }
@@ -224,7 +224,7 @@ router.post('/post-update-phim', [authentication.checkLogin, upload.single('imag
       // tại vì nếu list id trả về chỉ có 1 phần tử nên nó tự biến thành số. nên cần kiểm tra xem nó có phải là số hay không để thêm dữ liệu vào
       if (isNaN(daodiens) == false) {
         await database.query(`INSERT INTO ct_daodien (idphim, iddaodien) VALUES (${id}, ${daodiens})`);
-      } else {
+      } else if (daodiens != undefined) {
         for (const iddaodien of daodiens) {
           await database.query(`INSERT INTO ct_daodien (idphim, iddaodien) VALUES (${id}, ${iddaodien})`);
         }
@@ -232,7 +232,7 @@ router.post('/post-update-phim', [authentication.checkLogin, upload.single('imag
 
       if (isNaN(dienviens) == false) {
         await database.query(`INSERT INTO ct_dienvien (idphim, iddienvien) VALUES (${id}, ${dienviens})`);
-      } else {
+      } else if (dienviens != undefined) {
         for (const iddienvien of dienviens) {
           await database.query(`INSERT INTO ct_dienvien (idphim, iddienvien) VALUES (${id}, ${iddienvien})`);
         }
@@ -240,7 +240,7 @@ router.post('/post-update-phim', [authentication.checkLogin, upload.single('imag
 
       if (isNaN(quocgias) == false) {
         await database.query(`INSERT INTO ct_quocgia (idphim, idquocgia) VALUES (${id}, ${quocgias})`);
-      } else {
+      } else if (quocgias != undefined) {
         for (const idquocgia of quocgias) {
           await database.query(`INSERT INTO ct_quocgia (idphim, idquocgia) VALUES (${id}, ${idquocgia})`);
         }
@@ -248,7 +248,7 @@ router.post('/post-update-phim', [authentication.checkLogin, upload.single('imag
 
       if (isNaN(theloais) == false) {
         await database.query(`INSERT INTO ct_theloai (idphim, idtheloai) VALUES (${id}, ${theloais})`);
-      } else {
+      } else if (theloais != undefined) {
         for (const idtheloai of theloais) {
           await database.query(`INSERT INTO ct_theloai (idphim, idtheloai) VALUES (${id}, ${idtheloai})`);
         }
@@ -262,161 +262,11 @@ router.post('/post-update-phim', [authentication.checkLogin, upload.single('imag
 });
 
 
+router.get('/update-phim/:idPhim/tap', [authentication.checkLogin], controller.getTap);
+router.get('/update-phim/:idPhim/add-tap', [authentication.checkLogin], controller.getAddTap);
+router.get('/update-phim/:idPhim/update-tap/:idTap', [authentication.checkLogin], controller.getUpdateTap);
+router.post('/update-phim/:idPhim/post-add-tap', [authentication.checkLogin], controller.postAddTap);
+router.post('/update-phim/:idPhim/post-update-tap', [authentication.checkLogin], controller.postUpdateTap);
 
-
-
-
-
-
-
-
-
-
-router.get('/update-truyen/:idTruyen/chuong', [authentication.checkLogin], controller.getChuong);
-
-router.get('/update-truyen/:idTruyen/add-chuong', [authentication.checkLogin], controller.getAddChuong);
-router.get('/update-truyen/:idTruyen/update-chuong/:idChuong', [authentication.checkLogin], controller.getUpdateChuong);
-
-
-router.post('/update-truyen/:idTruyen/post-add-chuong', upload.array('images'), async (req, res) => {
-  try {
-    const files = req.files;
-    files.sort((a, b) => a.originalname.localeCompare(b.originalname));
-
-    // Upload các file lên Firebase Storage và trả về các URL
-    const urls = await Promise.all(files.map(async (file) => {
-      const bucket = firebase.storage().bucket();
-      const firebaseFileName = `${Date.now()}_${file.originalname}`;
-      const firebaseFile = bucket.file(`chuong/${firebaseFileName}`);
-      const fileStream = firebaseFile.createWriteStream();
-      fileStream.end(file.buffer);
-      await new Promise((resolve, reject) => {
-        fileStream.on('finish', resolve);
-        fileStream.on('error', reject);
-      });
-      const [url] = await firebaseFile.getSignedUrl({ action: 'read', expires: '01-01-2500' });
-      return url;
-    }));
-    const { tenchuong, sochuong } = req.body;
-    database.query("INSERT INTO chuong (tenchuong, sochuong, ngaycapnhat, idtruyen) VALUES (?, ? , now() , ?)", [tenchuong, sochuong, req.params.idTruyen], (err, results) => {
-      if (err) {
-        res.status(500).json({ message: err.message });
-      } else {
-        for (let index = 0; index < urls.length; index++) {
-          const element = urls[index];
-          database.query("INSERT INTO image_chuong (imagelink, idchuong) VALUES (?, ? )", [element, results.insertId], (err, results) => {
-            if (err) {
-              res.status(500).json({ message: err.message });
-            } else {
-            }
-          });
-        }
-
-      }
-    });
-    res.redirect(`/update-truyen/${req.params.idTruyen}/chuong`);
-    // Trả về các URL đã upload
-    // res.status(200).json({ urls });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('An error occurred while uploading the files.');
-  }
-});
-
-router.post('/update-truyen/:idTruyen/post-update-chuong', upload.array('images'), async (req, res) => {
-  try {
-    if (req.files[0] == undefined) {
-
-      const { tenchuong, sochuong, id } = req.body;
-      database.query(`UPDATE chuong
-      SET tenchuong = ? , sochuong = ?, ngaycapnhat = now()
-      WHERE id = ?`, [tenchuong, sochuong, id], (err, results) => {
-        if (err) {
-          res.status(500).json({ message: err.message });
-        } else {
-
-        }
-      });
-    } else {
-
-      const files = req.files;
-      files.sort((a, b) => a.originalname.localeCompare(b.originalname));
-
-      // Upload các file lên Firebase Storage và trả về các URL
-      const urls = await Promise.all(files.map(async (file) => {
-        const bucket = firebase.storage().bucket();
-        const firebaseFileName = `${Date.now()}_${file.originalname}`;
-        const firebaseFile = bucket.file(`chuong/${firebaseFileName}`);
-        const fileStream = firebaseFile.createWriteStream();
-        fileStream.end(file.buffer);
-        await new Promise((resolve, reject) => {
-          fileStream.on('finish', resolve);
-          fileStream.on('error', reject);
-        });
-        const [url] = await firebaseFile.getSignedUrl({ action: 'read', expires: '01-01-2500' });
-        return url;
-      }));
-      const { tenchuong, sochuong, id } = req.body;
-      database.query(`UPDATE chuong
-    SET tenchuong = ? , sochuong = ?, ngaycapnhat = now()
-    WHERE id = ?`, [tenchuong, sochuong, id], (err, results) => {
-        if (err) {
-          res.status(500).json({ message: err.message });
-        } else {
-
-          // xóa đi ảnh cũ
-          database.query(" select * from image_chuong WHERE idchuong = ?", [id], (err, results) => {
-            if (err) {
-              res.status(500).json({ message: err.message });
-            } else {
-              try {
-                for (let index = 0; index < results.length; index++) {
-                  const bucket = firebase.storage().bucket();
-                  const fileUrl = results[index].imagelink;
-                  const urlObj = new URL(fileUrl);
-                  const pathname = decodeURIComponent(urlObj.pathname);
-                  const filename = pathname.split('/').pop();
-                  const file = bucket.file('chuong/' + filename);
-                  file.delete().then(() => {
-                  }).catch((error) => {
-                    console.error('Error deleting file:', error);
-                  });
-                }
-
-              } catch (error) {
-                console.error(error);
-              }
-
-            }
-          });
-
-
-          database.query("DELETE FROM image_chuong WHERE idchuong = ?", [id], (err, results) => {
-            if (err) {
-              res.status(500).json({ message: err.message });
-            } else {
-            }
-          });
-          for (let index = 0; index < urls.length; index++) {
-            const element = urls[index];
-            database.query("INSERT INTO image_chuong (imagelink, idchuong) VALUES (?, ? )", [element, id], (err, results) => {
-              if (err) {
-                res.status(500).json({ message: err.message });
-              } else {
-              }
-            });
-          }
-
-        }
-      });
-    }
-    res.redirect(`/update-truyen/${req.params.idTruyen}/chuong`);
-    // Trả về các URL đã upload
-    // res.status(200).json({ urls });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('An error occurred while uploading the files.');
-  }
-});
 
 module.exports = router;

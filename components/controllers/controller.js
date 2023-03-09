@@ -57,7 +57,7 @@ const controller = {
                 } else if (results.rows.length > 0) {
                     user = results.rows[0];
                     const qr1 = `SELECT phim.*, 
-            CASE WHEN dinhdang = 0 THEN 'Phim lẻ' ELSE 'Phim bộ' END AS dinhdang_text, 
+            CASE WHEN dinhdang = 1 THEN 'Phim lẻ' ELSE 'Phim bộ' END AS dinhdang_text, 
             CASE WHEN trangthai = 1 THEN 'Đang chiếu' WHEN trangthai = 2 THEN 'Hoàn thành' WHEN trangthai = 3 THEN 'Ngừng hoạt động' ELSE '' END AS trangthai_text
             FROM phim
             ORDER BY phim.id`;
@@ -524,14 +524,6 @@ const controller = {
         }
     },
 
-
-
-
-
-
-
-
-    /////////////
     getAddPhim: async (req, res) => {
         try {
             let user = {};
@@ -599,15 +591,6 @@ const controller = {
             console.log(error);
         }
     },
-
-
-
-
-
-
-
-
-
 
     getUpdatePhim: async (req, res) => {
         try {
@@ -739,26 +722,103 @@ const controller = {
         }
     },
 
-    getChuong: async (req, res) => {
+    //////////////////
+    getTap: async (req, res) => {
         try {
-            let listChuong = [];
             let user = {};
-
-            database.query(`SELECT chuong.*, truyen.tentruyen FROM chuong 
-                        LEFT JOIN truyen ON chuong.idtruyen = truyen.id
-                        WHERE idtruyen = ? order by chuong.sochuong desc`, [req.params.idTruyen], (err, results) => {
+            let listTap = [];
+            const qr0 = `SELECT id, email, tennguoidung, avatar FROM nguoidung WHERE id = ${global.idNguoiDung}`
+            database.query(qr0, (err, results) => {
                 if (err) {
                     res.status(500).json({ message: err.message });
-                } else if (results.length > 0) {
-                    listChuong = results;
+                } else if (results.rows.length > 0) {
+                    user = results.rows[0];
+                    const qr = `SELECT tap.*, phim.tenphim FROM tap 
+                    LEFT JOIN phim ON tap.idphim = phim.id
+                    WHERE tap.idphim = ${req.params.idPhim} 
+                    order by tap.tapso desc`;
+                    database.query(qr, (err, results) => {
+                        if (err) {
+                            res.status(500).json({ message: err.message });
+                        } else {
+                            listTap = results.rows;
+                            res.render('tap', { user: user, listTap: listTap, idPhim: req.params.idPhim });
+                        }
+                    });
                 }
             });
-            database.query("SELECT id, email, tennguoidung, avatar FROM nguoidung WHERE id = ?", [global.idNguoiDung], (err, results) => {
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    getAddTap: async (req, res) => {
+        try {
+            let user = {};
+            const qr0 = `SELECT id, email, tennguoidung, avatar FROM nguoidung WHERE id = ${global.idNguoiDung}`
+
+            database.query(qr0, (err, results) => {
                 if (err) {
                     res.status(500).json({ message: err.message });
-                } else if (results.length > 0) {
-                    user = results[0];
-                    res.render('chuong', { user: user, listChuong: listChuong, idTruyen: req.params.idTruyen });
+                } else if (results.rows.length > 0) {
+                    user = results.rows[0];
+                    res.render('addtap', { user: user, idPhim: req.params.idPhim });
+                }
+            });
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
+    postAddTap: async (req, res) => {
+        try {
+            const { tentap, tapso, video } = req.body;
+            const qr = `INSERT INTO tap (tentap, tapso, ngaycapnhat, idphim, video) 
+                        VALUES ('${tentap}', ${tapso}, now(), ${req.params.idPhim}, '${video}')`
+            database.query(qr, (err, results) => {
+                if (err) {
+                    res.status(500).json({ message: err.message });
+                } else {
+                    res.redirect(`/update-phim/${req.params.idPhim}/tap`);
+                }
+            });
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
+
+    getUpdateTap: async (req, res) => {
+        try {
+            let user = {};
+            let tap = {};
+            const qr0 = `SELECT id, tentap, tapso, idphim, video FROM tap WHERE id = ${req.params.idTap}`;
+            database.query(qr0, (err, results) => {
+                if (err) {
+                    res.status(500).json({ message: err.message });
+                } else if (results.rows.length > 0) {
+                    tap = results.rows[0];
+                    const qr1 = `SELECT id, email, tennguoidung, avatar FROM nguoidung WHERE id = ${global.idNguoiDung}`
+                    database.query(qr1, (err, results) => {
+                        if (err) {
+                            res.status(500).json({ message: err.message });
+                        } else if (results.rows.length > 0) {
+                            user = results.rows[0];
+                            res.render('updatetap', { user: user, tap: tap });
+                        }
+                    });
                 }
             });
 
@@ -766,45 +826,17 @@ const controller = {
             res.status(500).json(error);
         }
     },
-
-    getAddChuong: async (req, res) => {
+    postUpdateTap: async (req, res) => {
         try {
-            let user = {};
-
-            database.query("SELECT id, email, tennguoidung, avatar FROM nguoidung WHERE id = ?", [global.idNguoiDung], (err, results) => {
+            const { tentap, tapso, video, id } = req.body;
+            const qr0 = `UPDATE tap SET tentap = '${tentap}', tapso = '${tapso}', video = '${video}', ngaycapnhat = now() WHERE id = ${id}`;
+            database.query(qr0, (err, results) => {
                 if (err) {
                     res.status(500).json({ message: err.message });
-                } else if (results.length > 0) {
-                    user = results[0];
-                    res.render('addchuong', { user: user, idTruyen: req.params.idTruyen });
+                } else {
+                    res.redirect(`/update-phim/${req.params.idPhim}/tap`);
                 }
             });
-
-        } catch (error) {
-            res.status(500).json(error);
-        }
-    },
-
-    getUpdateChuong: async (req, res) => {
-        try {
-            let user = {};
-            let chuong = {};
-            database.query("SELECT * FROM chuong WHERE id = ?", req.params.idChuong, (err, results) => {
-                if (err) {
-                    res.status(500).json({ message: err.message });
-                } else if (results.length > 0) {
-                    chuong = results[0];
-                }
-            });
-            database.query("SELECT id, email, tennguoidung, avatar FROM nguoidung WHERE id = ?", [global.idNguoiDung], (err, results) => {
-                if (err) {
-                    res.status(500).json({ message: err.message });
-                } else if (results.length > 0) {
-                    user = results[0];
-                    res.render('updatechuong', { user: user, chuong: chuong });
-                }
-            });
-
         } catch (error) {
             res.status(500).json(error);
         }
