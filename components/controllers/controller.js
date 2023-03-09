@@ -59,7 +59,8 @@ const controller = {
                     const qr1 = `SELECT phim.*, 
             CASE WHEN dinhdang = 0 THEN 'Phim lẻ' ELSE 'Phim bộ' END AS dinhdang_text, 
             CASE WHEN trangthai = 1 THEN 'Đang chiếu' WHEN trangthai = 2 THEN 'Hoàn thành' WHEN trangthai = 3 THEN 'Ngừng hoạt động' ELSE '' END AS trangthai_text
-            FROM phim;`;
+            FROM phim
+            ORDER BY phim.id`;
                     database.query(qr1, (err, results) => {
                         if (err) {
                             res.status(500).json({ message: err.message });
@@ -181,6 +182,34 @@ const controller = {
                         } else {
                             listDienVien = results.rows;
                             res.render('dienvien', { user: user, listDienVien: listDienVien });
+                        }
+                    });
+                }
+            });
+
+
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
+    getQuocGia: async (req, res) => {
+        try {
+            let user = {};
+            let listQuocGia = [];
+
+            const qr0 = `SELECT id, email, tennguoidung, avatar FROM nguoidung WHERE id = ${global.idNguoiDung}`
+            database.query(qr0, (err, results) => {
+                if (err) {
+                    res.status(500).json({ message: err.message });
+                } else if (results.rows.length > 0) {
+                    user = results.rows[0];
+                    const qr = "select * from quocgia";
+                    database.query(qr, (err, results) => {
+                        if (err) {
+                            res.status(500).json({ message: err.message });
+                        } else {
+                            listQuocGia = results.rows;
+                            res.render('quocgia', { user: user, listQuocGia: listQuocGia });
                         }
                     });
                 }
@@ -420,15 +449,108 @@ const controller = {
         }
     },
 
+    getAddQuocGia: async (req, res) => {
+        try {
+            let user = {};
+            const qr0 = `SELECT id, email, tennguoidung, avatar FROM nguoidung WHERE id = ${global.idNguoiDung}`
+
+            database.query(qr0, (err, results) => {
+                if (err) {
+                    res.status(500).json({ message: err.message });
+                } else if (results.rows.length > 0) {
+                    user = results.rows[0];
+                    res.render('addquocgia', { user: user });
+                }
+            });
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
+    postAddQuocGia: async (req, res) => {
+        try {
+            const { tenquocgia } = req.body;
+            const qr = `INSERT INTO quocgia (tenquocgia) VALUES ('${tenquocgia}')`
+            database.query(qr, (err, results) => {
+                if (err) {
+                    res.status(500).json({ message: err.message });
+                } else {
+                    res.redirect('/quoc-gia');
+                }
+            });
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
+
+    getUpdateQuocGia: async (req, res) => {
+        try {
+            let user = {};
+            let quocgia = {};
+            const qr0 = `SELECT id, tenquocgia FROM quocgia WHERE id = ${req.params.id}`;
+            database.query(qr0, (err, results) => {
+                if (err) {
+                    res.status(500).json({ message: err.message });
+                } else if (results.rows.length > 0) {
+                    quocgia = results.rows[0];
+                    const qr1 = `SELECT id, email, tennguoidung, avatar FROM nguoidung WHERE id = ${global.idNguoiDung}`
+                    database.query(qr1, (err, results) => {
+                        if (err) {
+                            res.status(500).json({ message: err.message });
+                        } else if (results.rows.length > 0) {
+                            user = results.rows[0];
+                            res.render('updatequocgia', { user: user, quocgia: quocgia });
+                        }
+                    });
+                }
+            });
+
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
+    postUpdateQuocGia: async (req, res) => {
+        try {
+            const { tenquocgia, id } = req.body;
+            const qr0 = `UPDATE quocgia SET tenquocgia = '${tenquocgia}'  WHERE id = ${id}`;
+            database.query(qr0, (err, results) => {
+                if (err) {
+                    res.status(500).json({ message: err.message });
+                } else {
+                    res.redirect('/quoc-gia');
+                }
+            });
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
 
 
 
+
+
+
+
+
+    /////////////
     getAddPhim: async (req, res) => {
         try {
             let user = {};
             let listDaoDien = [];
             let listDienVien = [];
             let listTheLoai = [];
+            let listQuocGia = [];
+            let listDangPhim = [
+                {
+                    "value": 1,
+                    "option": "Phim lẻ",
+                    "selected": null
+                },
+                {
+                    "value": 2,
+                    "option": "Phim bộ",
+                    "selected": null
+                }
+            ];
             let listChatLuong = [
                 {
                     "value": 1,
@@ -469,7 +591,9 @@ const controller = {
             const result4 = await database.query("SELECT id, email, tennguoidung, avatar FROM nguoidung WHERE id = $1", [global.idNguoiDung]);
             user = result4.rows[0];
 
-            res.render('addphim', { user: user, listDaoDien: listDaoDien, listDienVien: listDienVien, listTheLoai: listTheLoai, listChatLuong: listChatLuong });
+            const result5 = await database.query("SELECT * FROM quocgia ORDER BY tenquocgia");
+            listQuocGia = result5.rows;
+            res.render('addphim', { user: user, listDaoDien: listDaoDien, listDienVien: listDienVien, listTheLoai: listTheLoai, listChatLuong: listChatLuong, listQuocGia: listQuocGia, listDangPhim: listDangPhim });
         } catch (error) {
             res.status(500).json(error);
             console.log(error);
@@ -480,16 +604,62 @@ const controller = {
 
 
 
+
+
+
+
+
     getUpdatePhim: async (req, res) => {
         try {
             let user = {};
-            let truyen = {};
-            let listTacGia = [];
+            let phim = {};
+            let listDaoDien = [];
+            let listDienVien = [];
             let listTheLoai = [];
-            let tinhtrangs = [
+            let listQuocGia = [];
+            let listDangPhim = [
                 {
                     "value": 1,
-                    "option": "Đang chiếu",
+                    "option": "Phim lẻ",
+                    "selected": null
+                },
+                {
+                    "value": 2,
+                    "option": "Phim bộ",
+                    "selected": null
+                }
+            ];
+            let listChatLuong = [
+                {
+                    "value": 1,
+                    "option": "360p",
+                    "selected": null
+                },
+                {
+                    "value": 2,
+                    "option": "720p",
+                    "selected": null
+                },
+                {
+                    "value": 3,
+                    "option": "1080p",
+                    "selected": null
+                },
+                {
+                    "value": 4,
+                    "option": "1440p",
+                    "selected": null
+                },
+                {
+                    "value": 5,
+                    "option": "2160p",
+                    "selected": null
+                }
+            ];
+            let listTrangThai = [
+                {
+                    "value": 1,
+                    "option": "Đang tiến hành",
                     "selected": null
                 },
                 {
@@ -504,53 +674,67 @@ const controller = {
                 }
             ];
             const id = req.params.id;
-            var qr0 = `SELECT * from truyen where id = ${id}`
-            database.query(qr0, (err, results) => {
-                if (err) {
-                    res.status(500).json({ message: err.message });
-                } else {
-                    truyen = results[0];
-                    for (let i = 0; i < tinhtrangs.length; i++) {
-                        if (tinhtrangs[i].value === results[0].tinhtrang) {
-                            tinhtrangs[i].selected = true;
-                        }
-                    }
-                }
-            });
+            // Thực hiện các truy vấn lần lượt và chờ kết quả trả về bằng Promise và await
+            const result1 = await database.query(`
+                        SELECT daodien.*, ct_daodien.idphim as checkdaodien
+                        FROM daodien
+                        LEFT JOIN ct_daodien ON daodien.id = ct_daodien.iddaodien AND ct_daodien.idphim = ${id}
+                        group by daodien.id, ct_daodien.idphim
+                        order by daodien.tendaodien`);
+            listDaoDien = result1.rows;
 
-            var qr1 = `SELECT theloai.*, ct_theloai.idtruyen as checktheloai
+            const result2 = await database.query(`
+                        SELECT dienvien.*, ct_dienvien.idphim as checkdienvien
+                        FROM dienvien
+                        LEFT JOIN ct_dienvien ON dienvien.id = ct_dienvien.iddienvien AND ct_dienvien.idphim = ${id}
+                        group by dienvien.id, ct_dienvien.idphim
+                        order by dienvien.tendienvien`);
+            listDienVien = result2.rows;
+
+            const result3 = await database.query(`
+                        SELECT theloai.*, ct_theloai.idphim as checktheloai
                         FROM theloai
-                        LEFT JOIN ct_theloai ON theloai.id = ct_theloai.idtheloai AND ct_theloai.idtruyen = ${id}
-                        group by theloai.id
-                        order by theloai.tentheloai;`
-            database.query(qr1, (err, results) => {
-                if (err) {
-                    res.status(500).json({ message: err.message });
-                } else {
-                    listTheLoai = results;
+                        LEFT JOIN ct_theloai ON theloai.id = ct_theloai.idtheloai AND ct_theloai.idphim = ${id}
+                        group by theloai.id, ct_theloai.idphim
+                        order by theloai.tentheloai`);
+            listTheLoai = result3.rows;
+
+            const result4 = await database.query("SELECT id, email, tennguoidung, avatar FROM nguoidung WHERE id = $1", [global.idNguoiDung]);
+            user = result4.rows[0];
+
+            const result5 = await database.query(`
+                        SELECT quocgia.*, ct_quocgia.idphim as checkquocgia
+                        FROM quocgia
+                        LEFT JOIN ct_quocgia ON quocgia.id = ct_quocgia.idquocgia AND ct_quocgia.idphim = ${id}
+                        group by quocgia.id, ct_quocgia.idphim
+                        order by quocgia.tenquocgia`);
+            listQuocGia = result5.rows;
+
+            const result6 = await database.query(`SELECT * from phim where id = ${id}`);
+            phim = result6.rows[0];
+
+            // check các option
+            for (let i = 0; i < listTrangThai.length; i++) {
+                if (listTrangThai[i].value === phim.trangthai) {
+                    listTrangThai[i].selected = true;
                 }
-            });
-            var qr2 = `SELECT tacgia.*, ct_tacgia.idtruyen as checktacgia
-                        FROM tacgia
-                        LEFT JOIN ct_tacgia ON tacgia.id = ct_tacgia.idtacgia AND ct_tacgia.idtruyen = ${id}
-                        group by tacgia.id
-                        order by tacgia.tentacgia;`
-            database.query(qr2, (err, results) => {
-                if (err) {
-                    res.status(500).json({ message: err.message });
-                } else {
-                    listTacGia = results;
+            }
+            for (let i = 0; i < listChatLuong.length; i++) {
+                if (listChatLuong[i].value === phim.chatluong) {
+                    listChatLuong[i].selected = true;
                 }
-            });
-            database.query("SELECT id, email, tennguoidung, avatar FROM nguoidung WHERE id = ?", [global.idNguoiDung], (err, results) => {
-                if (err) {
-                    res.status(500).json({ message: err.message });
-                } else if (results.length > 0) {
-                    user = results[0];
-                    res.render('updatetruyen', { user: user, listTacGia: listTacGia, listTheLoai: listTheLoai, truyen: truyen, tinhtrangs: tinhtrangs });
+            }
+            for (let i = 0; i < listDangPhim.length; i++) {
+                if (listDangPhim[i].value === phim.dangphim) {
+                    listDangPhim[i].selected = true;
                 }
-            });
+            }
+
+            res.render('updatephim', { user: user, listDaoDien: listDaoDien, listDienVien: listDienVien, listTheLoai: listTheLoai, listChatLuong: listChatLuong, listQuocGia: listQuocGia, listDangPhim: listDangPhim, phim: phim, listTrangThai: listTrangThai });
+
+
         } catch (error) {
+            console.log(error);
             res.status(500).json(error);
         }
     },

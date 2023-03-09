@@ -132,69 +132,80 @@
         </ul>
 
         <div class="container">
-            <h2>Thêm phim</h2>
-            <form action="/post-add-phim" method="post" enctype="multipart/form-data">
+            <button onclick="tap('{{phim.id}}')" class="btn" type="submit">Tập</button>
+
+            <h2>Sửa phim</h2>
+            <form action="/post-update-phim" method="post" enctype="multipart/form-data">
+                <label for="id">ID</label>
+                <input type="text" id="id" name="id" value={{phim.id}} required readonly>
                 <label for="tenphim">Tên phim:</label>
-                <input type="text" id="tenphim" name="tenphim" required>
+                <input type="text" id="tenphim" name="tenphim" value="{{phim.tenphim}}" required>
                 <label for="tenkhac">Tên khác:</label>
-                <input type="text" id="tenkhac" name="tenkhac">
+                <input type="text" id="tenkhac" name="tenkhac" value="{{phim.tenkhac}}">
                 <label for="mota">Mô tả:</label>
-                <textarea id="mota" name="mota" rows="4" cols="50"></textarea>
+                <textarea id="mota" name="mota" rows="4" cols="50">{{{phim.mota}}}</textarea>
                 <label for="namphathanh">Năm phát hành:</label>
-                <input type="number" id="namphathanh" name="namphathanh" required min="1900">
+                <input type="number" id="namphathanh" name="namphathanh" value={{phim.namphathanh}} required min="1900">
                 <label for="dinhdang">Dạng phim:</label>
                 <select name="dinhdang" id="dinhdang">
                     {{#each listDangPhim}}
-                    <option value={{value}}>{{option}}</option>
+                    <option value="{{value}}" {{#if selected}}selected{{/if}}>{{option}}</option>
                     {{/each}}
                 </select>
                 <div class="mgb"></div>
                 <label for="sotap">Tổng số tập:</label>
-                <input type="number" id="sotap" name="sotap" min="0">
+                <input type="number" id="sotap" name="sotap" value={{phim.sotap}} min="0">
                 <label for="chatluong">Chất lượng:</label>
                 <select name="chatluong" id="chatluong">
                     {{#each listChatLuong}}
-                    <option value={{value}}>{{option}}</option>
+                    <option value="{{value}}" {{#if selected}}selected{{/if}}>{{option}}</option>
                     {{/each}}
                 </select>
                 <div class="mgb"></div>
                 <label for="thoiluong">Thời lường (phút/tập):</label>
-                <input type="number" id="thoiluong" name="thoiluong" min="0">
+                <input type="number" id="thoiluong" name="thoiluong" value={{phim.thoiluong}} min="0">
                 <label for="image">Hình ảnh bìa:</label>
-                <input type="file" id="image" name="image" accept="image/*" onchange="previewImage(event);" required>
-                <img id="preview" src="" alt="Preview Image"
+                <input type="file" id="image" name="image" accept="image/*" onchange="previewImage(event);">
+                <img id="preview" src={{phim.image}} alt="Preview Image"
                     style="max-width: 300px; max-height: 300px; object-fit: cover;">
+                <div class="mgb"></div>
+                <label for="trangthai">Trạng thái:</label>
+                <select name="trangthai" id="trangthai">
+                    {{#each listTrangThai}}
+                    <option value="{{value}}" {{#if selected}}selected{{/if}}>{{option}}</option>
+                    {{/each}}
+                </select>
                 <div class="mgb"></div>
                 <label for="daodiens">Đạo diễn:</label>
                 <select name="daodiens" id="daodiens" multiple>
                     {{#each listDaoDien}}
-                    <option value={{id}}>{{tendaodien}}</option>
+                    <option value={{id}} {{#if checkdaodien}}selected{{/if}}>{{tendaodien}}</option>
                     {{/each}}
                 </select>
                 <div class="mgb"></div>
                 <label for="dienviens">Diễn viên:</label>
                 <select name="dienviens" id="dienviens" multiple>
                     {{#each listDienVien}}
-                    <option value={{id}}>{{tendienvien}}</option>
+                    <option value={{id}} {{#if checkdienvien}}selected{{/if}}>{{tendienvien}}</option>
                     {{/each}}
                 </select>
                 <div class="mgb"></div>
                 <label for="quocgias">Quốc gia:</label>
                 <select name="quocgias" id="quocgias" multiple>
                     {{#each listQuocGia}}
-                    <option value={{id}}>{{tenquocgia}}</option>
+                    <option value={{id}} {{#if checkquocgia}}selected{{/if}}>{{tenquocgia}}</option>
                     {{/each}}
                 </select>
                 <div class="mgb"></div>
                 <label for="theloais">Thể loại:</label>
-                <select class="select" name="theloais" id="theloais" multiple>
+                <select name="theloais" id="theloais" multiple>
                     {{#each listTheLoai}}
-                    <option value={{id}}>{{tentheloai}}</option>
+                    <option value={{id}} {{#if checktheloai}}selected{{/if}}>{{tentheloai}}</option>
                     {{/each}}
                 </select>
                 <div class="mgb"></div>
 
-                <button type="submit">Thêm</button>
+                <button type="submit">Lưu</button>
             </form>
         </div>
     </div>
@@ -206,6 +217,7 @@
             $('#theloais').select2();
             $('#quocgias').select2();
             $('#dinhdang').select2();
+            $('#trangthai').select2();
         });
 
         function previewImage(event) {
@@ -219,5 +231,10 @@
                 reader.readAsDataURL(input.files[0]);
             }
         }
+        function tap(id) {
+            window.location.href = `/update-phim/${id}/tap`;
+        }
+
+
     </script>
 </body>
