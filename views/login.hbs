@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Đăng Nhập</title>
+    <style>
+        body {
+            background-color: #f1f1f1;
+        }
+
+        .container {
+            margin: auto;
+            width: 50%;
+            padding: 20px;
+            background-color: #ffff;
+            border-radius: 5px;
+            box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.3);
+        }
+
+        .form {
+            margin: 20px;
+            background-color: #ffff;
+            border-color: #ffff;
+        }
+
+        input[type=email],
+        input[type=password] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Đăng Nhập</h2>
+        <form class="form" id="login-form" name="contactForm" onsubmit="return validateForm()">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" placeholder="Email...">
+
+            <label for="matkhau">Mật Khẩu:</label>
+            <input type="password" id="matkhau" name="matkhau" placeholder="Mật khẩu...">
+
+            {{!-- <div class="alert alert-danger">{{message}}</div> --}}
+            <p style="width: 70%; font-size:12px; text-align: left;
+            color: red; font-family: Arial, Helvetica, sans-serif;margin: 10px;" id="login-message"></p>
+            <hr>
+            <button type="submit">Đăng Nhập</button>
+
+        </form>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script>
+        function validateForm() {
+            var email = document.forms["contactForm"]["email"].value;
+            // var fname = document.getElementById("fname").value;
+            var matkhau = document.forms["contactForm"]["matkhau"].value;
+            // var sname = document.getElementById("sname").value;
+            if (email == null || email == "") {
+                alert("Vui lòng nhập email");
+                return false;
+            } else if (matkhau == null || matkhau == "") {
+                alert("Vui lòng nhập mật khẩu");
+                return false;
+            }
+        }
+
+        // 
+        const loginForm = $('#login-form');
+        const loginMessage = $('#login-message');
+
+        loginForm.submit(function (event) {
+            event.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: '/login',
+                data: loginForm.serialize(),
+                success: function (response) {
+                    if (response.success == true) {
+                        window.location.href = '/'; // chuyển trang khi đăng nhập thành công
+                    } else {
+                        loginMessage.text(response.message);
+                    }
+                },
+                error: function () {
+                    loginMessage.text('Đã có lỗi xảy ra. Vui lòng thử lại sau.');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

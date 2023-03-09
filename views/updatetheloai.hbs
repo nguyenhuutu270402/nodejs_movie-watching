@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Movie Watching</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #666;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            background-color: #f2f2f2;
+            margin-bottom: 20px;
+        }
+
+        textarea {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            background-color: #f2f2f2;
+            margin-bottom: 20px;
+        }
+
+        button[type="submit"] {
+            background-color: #3c4eb2;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #273688;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="body_index2">
+        <div class="header_index2">
+            <div class="headr_logo">
+                <img src="https://icon-library.com/images/free-movies-icon/free-movies-icon-16.jpg" />
+                <h2>Movie Watching</h2>
+            </div>
+            <div class="header_account">
+                <img src="{{user.avatar}}" />
+                <p class="mt-3">{{user.tennguoidung}}</p>
+                <a href="/logout"><button>Log out</button></a>
+            </div>
+        </div>
+
+        <!-- Tab link -->
+        <ul class="menu-list">
+            <a href="/" class="tablinks">
+                <li>Truyện</li>
+            </a>
+            <a href="/the-loai" class="tablinks" style="color: red;
+            border-bottom: 2px solid red;">
+                <li>Thể loại</li>
+            </a>
+            <a href="/dao-dien" class="tablinks">
+                <li>Đạo diễn</li>
+            </a>
+            <a href="/dien-vien" class="tablinks">
+                <li>Diễn viên</li>
+            </a>
+            <a href="/nguoi-dung" class="tablinks">
+                <li>Người dùng</li>
+            </a>
+        </ul>
+
+        <div class="container">
+            <h2>Sửa thể loại</h2>
+            <form action="/post-update-the-loai" method="post">
+                <label for="id">ID:</label>
+                <input type="text" id="id" name="id" value="{{theloai.id}}" readonly required>
+                <label for="tentheloai">Tên thể loại:</label>
+                <input type="text" id="tentheloai" name="tentheloai" value="{{theloai.tentheloai}}" required>
+                <button type="submit">Lưu</button>
+            </form>
+        </div>
+
+    </div>
+    <script>
+    </script>
+</body>

@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Movie Watching</title>
+    <title>Comic Reading</title>
     <style>
         body {
             background-color: #f1f1f1;
@@ -22,13 +22,14 @@
             border: 1px solid #ddd;
             padding: 8px;
             text-align: center;
-
+            padding: 20px;
         }
 
         th {
-            background-color: #3c4eb2;
+            background-color: #4CAF50;
             color: #fff;
             padding: 20px;
+
         }
 
         tr:nth-child(even) {
@@ -58,7 +59,7 @@
         }
 
         button[type="submit"] {
-            background-color: #3c4eb2;
+            background-color: #4CAF50;
             border: none;
             color: white;
             padding: 8px 16px;
@@ -67,11 +68,10 @@
             font-size: 16px;
             border-radius: 4px;
             cursor: pointer;
-            align-content: flex-end;
         }
 
         button[type="submit"]:hover {
-            background-color: #273688;
+            background-color: #3e8e41;
         }
 
         .btn {
@@ -82,12 +82,6 @@
             text-decoration: none;
             color: #333;
         }
-
-        img {
-            width: 100px;
-            height: 150px;
-            object-fit: cover;
-        }
     </style>
 </head>
 
@@ -96,8 +90,9 @@
     <div class="body_index2">
         <div class="header_index2">
             <div class="headr_logo">
-                <img src="https://icon-library.com/images/free-movies-icon/free-movies-icon-16.jpg" />
-                <h2>Movie Watching</h2>
+                <img
+                    src="https://yt3.googleusercontent.com/ytc/AL5GRJWNFkKQnRDA04U8Kwp6hryPKEVdskQzvWAtLs1X=s900-c-k-c0x00ffffff-no-rj" />
+                <h2>Comic Reading</h2>
             </div>
             <div class="header_account">
                 <img src="{{user.avatar}}" />
@@ -108,51 +103,42 @@
 
         <!-- Tab link -->
         <ul class="menu-list">
-            <a class="tablinks" style="color: red;
+            <a href="/" class="tablinks" style="color: red;
             border-bottom: 2px solid red;">
                 <li>Truyện</li>
             </a>
             <a href="/the-loai" class="tablinks">
                 <li>Thể loại</li>
             </a>
-            <a href="/dao-dien" class="tablinks">
-                <li>Đạo diễn</li>
+            <a href="/tac-gia" class="tablinks">
+                <li>Tác giả</li>
             </a>
-            <a href="/dien-vien" class="tablinks">
-                <li>Diễn viên</li>
-            </a>
-            <a href="/nguoi-dung" class="tablinks">
+            <a class="tablinks" href="/nguoi-dung">
                 <li>Người dùng</li>
             </a>
         </ul>
 
         <body>
-            <button onclick="them()" class="btn" type="submit">Thêm</button>
 
+            <button onclick="them('{{idTruyen}}')" class="btn" type="submit">Thêm</button>
             <table>
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Tên phim</th>
-                        <th>Dạng phim</th>
-                        <th>Trang thái</th>
-                        <th>Năm</th>
-                        <th>Ảnh bìa</th>
+                        <th>Tên chương</th>
+                        <th>Chương số</th>
+                        <th>Truyện</th>
+                        <th>Ngày cập nhật</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {{#each listPhim}}
+                    {{#each listChuong}}
                     <tr>
                         <td>{{id}}</td>
-                        <td class="tentruyen"><a href="/update-truyen/{{id}}">{{tenphim}}</a></td>
-                        <td><a href="/update-truyen/{{id}}">{{dinhdang_text}}</a></td>
-                        <td><a href="/update-truyen/{{id}}">{{trangthai_text}}</a></td>
-                        <td><a href="/update-truyen/{{id}}">{{namphathanh}}</a></td>
-                        <td>
-                            <a href="/update-truyen/{{id}}">
-                                <img src={{image}} />
-                            </a>
-                        </td>
+                        <td><a href="/update-truyen/{{idtruyen}}/update-chuong/{{id}}">{{tenchuong}}</a></td>
+                        <td>{{sochuong}}</td>
+                        <td>{{tentruyen}}</td>
+                        <td>{{moment ngaycapnhat "HH:mm DD/MM/YYYY"}}</td>
                     </tr>
                     {{/each}}
                 </tbody>
@@ -160,8 +146,8 @@
 
     </div>
     <script>
-        function them() {
-            window.location.href = "/add-truyen";
+        function them(idTruyen) {
+            window.location.href = `/update-truyen/${idTruyen}/add-chuong`;
         }
     </script>
 </body>

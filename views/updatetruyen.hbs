@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Comic Reading</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #666;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            background-color: #f2f2f2;
+            margin-bottom: 20px;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            background-color: #f2f2f2;
+            margin-bottom: 20px;
+        }
+
+        textarea {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            background-color: #f2f2f2;
+            margin-bottom: 20px;
+        }
+
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .mgb {
+            margin-bottom: 20px;
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="body_index2">
+        <div class="header_index2">
+            <div class="headr_logo">
+                <img
+                    src="https://yt3.googleusercontent.com/ytc/AL5GRJWNFkKQnRDA04U8Kwp6hryPKEVdskQzvWAtLs1X=s900-c-k-c0x00ffffff-no-rj" />
+                <h2>Comic Reading</h2>
+            </div>
+            <div class="header_account">
+                <img src="{{user.avatar}}" />
+                <p class="mt-3">{{user.tennguoidung}}</p>
+                <a href="/logout"><button>Log out</button></a>
+            </div>
+        </div>
+
+        <!-- Tab link -->
+        <ul class="menu-list">
+            <a href="/" class="tablinks" style="color: red;
+            border-bottom: 2px solid red;">
+                <li>Truyện</li>
+            </a>
+            <a href="/the-loai" class="tablinks">
+                <li>Thể loại</li>
+            </a>
+            <a href="/tac-gia" class="tablinks">
+                <li>Tác giả</li>
+            </a>
+            <a href="/nguoi-dung" class="tablinks">
+                <li>Người dùng</li>
+            </a>
+        </ul>
+        <div class="container">
+            <button onclick="chuong('{{truyen.id}}')" class="btn" type="submit">Chương</button>
+
+            <h2>Sửa truyện</h2>
+            <form action="/post-update-truyen" method="post" enctype="multipart/form-data">
+                <label for="id">ID</label>
+                <input type="text" id="id" name="id" value={{truyen.id}} required readonly>
+                <label for="tentruyen">Tên truyện:</label>
+                <input type="text" id="tentruyen" name="tentruyen" value="{{truyen.tentruyen}}" required>
+                <label for="tenkhac">Tên khác:</label>
+                <input type="text" id="tenkhac" name="tenkhac" value="{{truyen.tenkhac}}">
+                <label for="mota">Mô tả:</label>
+                <textarea id="mota" name="mota" rows="4" cols="50">{{truyen.mota}}</textarea>
+                <label for="image">Hình ảnh bìa:</label>
+                <input type="file" id="image" name="image" accept="image/*" onchange="previewImage(event);">
+                <!-- Hiển thị hình ảnh đã chọn -->
+                <img id="preview" src={{truyen.imagelink}} alt="Preview Image"
+                    style="max-width: 300px; max-height: 300px; object-fit: cover;">
+                <div class="mgb"></div>
+                <label for="tinhtrang">Tình trạng:</label>
+                <select name="tinhtrang" id="tinhtrang">
+                    {{#each tinhtrangs}}
+                    <option value="{{this.value}}" {{#if this.selected}}selected{{/if}}>{{this.option}}</option>
+                    {{/each}}
+                </select>
+                <div class="mgb"></div>
+
+                <label for="tacgias">Tác giả:</label>
+                <select name="tacgias" id="tacgias" multiple>
+                    {{#each listTacGia}}
+                    <option value={{id}} {{#if checktacgia}}selected{{/if}}>{{tentacgia}}</option>
+                    {{/each}}
+                </select>
+                <div class="mgb"></div>
+                <label for="theloais">Thể loại:</label>
+                <select name="theloais" id="theloais" multiple>
+                    {{#each listTheLoai}}
+                    <option value={{id}} {{#if checktheloai}}selected{{/if}}>{{tentheloai}}</option>
+                    {{/each}}
+                </select>
+                <div class="mgb"></div>
+
+                <button type="submit">Lưu</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('#tacgias').select2();
+            $('#theloais').select2();
+            $('#tinhtrang').select2();
+        });
+
+        Handlebars.registerHelper('eq', function (a, b, options) {
+            if (a === b) {
+                return options.fn(this);
+            }
+            return options.inverse(this);
+        });
+
+        function previewImage(event) {
+            const input = event.target;
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const img = document.getElementById('preview');
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        function chuong(id) {
+            window.location.href = `/update-truyen/${id}/chuong`;
+        }
+    </script>
+</body>

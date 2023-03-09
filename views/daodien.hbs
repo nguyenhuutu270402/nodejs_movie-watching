@@ -22,7 +22,7 @@
             border: 1px solid #ddd;
             padding: 8px;
             text-align: center;
-
+            padding: 20px;
         }
 
         th {
@@ -108,14 +108,14 @@
 
         <!-- Tab link -->
         <ul class="menu-list">
-            <a class="tablinks" style="color: red;
-            border-bottom: 2px solid red;">
+            <a href="/" class="tablinks">
                 <li>Truyện</li>
             </a>
             <a href="/the-loai" class="tablinks">
                 <li>Thể loại</li>
             </a>
-            <a href="/dao-dien" class="tablinks">
+            <a href="/dao-dien" class="tablinks" style="color: red;
+            border-bottom: 2px solid red;">
                 <li>Đạo diễn</li>
             </a>
             <a href="/dien-vien" class="tablinks">
@@ -128,31 +128,19 @@
 
         <body>
             <button onclick="them()" class="btn" type="submit">Thêm</button>
-
             <table>
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Tên phim</th>
-                        <th>Dạng phim</th>
-                        <th>Trang thái</th>
-                        <th>Năm</th>
-                        <th>Ảnh bìa</th>
+                        <th>Tên đạo diễn</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {{#each listPhim}}
+                    {{#each listDaoDien}}
                     <tr>
                         <td>{{id}}</td>
-                        <td class="tentruyen"><a href="/update-truyen/{{id}}">{{tenphim}}</a></td>
-                        <td><a href="/update-truyen/{{id}}">{{dinhdang_text}}</a></td>
-                        <td><a href="/update-truyen/{{id}}">{{trangthai_text}}</a></td>
-                        <td><a href="/update-truyen/{{id}}">{{namphathanh}}</a></td>
-                        <td>
-                            <a href="/update-truyen/{{id}}">
-                                <img src={{image}} />
-                            </a>
-                        </td>
+                        <td><a href="/update-dao-dien/{{id}}">{{tendaodien}}</a></td>
+
                     </tr>
                     {{/each}}
                 </tbody>
@@ -161,7 +149,7 @@
     </div>
     <script>
         function them() {
-            window.location.href = "/add-truyen";
+            window.location.href = "/add-dao-dien";
         }
     </script>
 </body>
