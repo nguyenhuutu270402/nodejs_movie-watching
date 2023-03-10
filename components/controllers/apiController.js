@@ -4,7 +4,7 @@ const apiController = {
     /// test
     getTessst: async (req, res) => {
         try {
-            const qr = `INSERT INTO luotxem (idtap, idnguoidung) VALUES (4, 2)`;
+            const qr = `select * from binhluan`;
             const result1 = await database.query(qr);
             console.log(result1);
             res.status(200).json(result1);
@@ -157,7 +157,8 @@ const apiController = {
 
     getOnePhimById: async (req, res) => {
         try {
-            var id = req.params.id;
+            const id = req.params.id;
+            const idNguoiDung = req.params.idNguoiDung;
             const result1 = await database.query(`
             SELECT 
             phim.*,
@@ -169,9 +170,11 @@ const apiController = {
             (
                 SELECT json_agg(tap_info) 
                 FROM (
-                    SELECT id, tentap, tapso, ngaycapnhat, idphim, video 
+                    SELECT tap.id, tap.tentap, tap.tapso, luotxem.idnguoidung as idnguoidung_da_xem
                     FROM tap 
-                    WHERE idphim = phim.id 
+                    LEFT JOIN luotxem ON tap.id = luotxem.idtap AND luotxem.idnguoidung = ${idNguoiDung}
+                    WHERE tap.idphim = phim.id 
+                    GROUP BY tap.id, luotxem.idnguoidung
                     ORDER BY tapso DESC
                 ) AS tap_info
             ) AS ds_tap,
@@ -222,7 +225,6 @@ const apiController = {
         WHERE phim.id = ${id}
         GROUP BY phim.id;
             `);
-
             res.status(200).json({ result: true, data: result1.rows[0] });
         } catch (error) {
             console.log("API error getOnePhimById: ", error);
@@ -230,6 +232,94 @@ const apiController = {
         }
     },
 
+    addLuotXem: async (req, res) => {
+        try {
+            const { idnguoidung, idtap } = req.body;
+            await database.query(`INSERT INTO luotxem (idnguoidung, idtap, ngayxem) VALUES (${idnguoidung}, ${idtap}, now())`);
+            res.status(200).json({ result: true });
+        } catch (error) {
+            console.log("API error addLuotXem: ", error);
+            res.status(500).json(error);
+        }
+    },
 
+    addDanhGia: async (req, res) => {
+        try {
+            const { idnguoidung, idphim, sosao } = req.body;
+            const result1 = await database.query(`SELECT * FROM danhgia WHERE idnguoidung = ${idnguoidung} AND idphim = ${idphim}`);
+            if (result1.rows[0]) {
+                await database.query(`UPDATE danhgia SET sosao = ${sosao} WHERE idnguoidung = ${idnguoidung} AND idphim = ${idphim}`);
+            } else {
+                await database.query(`INSERT INTO danhgia (idnguoidung, idphim, sosao) VALUES (${idnguoidung}, ${idphim}, ${sosao})`);
+            }
+            res.status(200).json({ result: true });
+        } catch (error) {
+            console.log("API error addDanhGia: ", error);
+            res.status(500).json(error);
+        }
+    },
+
+    addTheoDoi: async (req, res) => {
+        try {
+            const { idnguoidung, idphim } = req.body;
+            await database.query(`INSERT INTO theodoi (idnguoidung, idphim) VALUES (${idnguoidung}, ${idphim})`);
+            res.status(200).json({ result: true });
+        } catch (error) {
+            console.log("API error addTheoDoi: ", error);
+            res.status(500).json(error);
+        }
+    },
+
+    deleteTheoDoi: async (req, res) => {
+        try {
+            const { idnguoidung, idphim } = req.body;
+            await database.query(`DELETE FROM theodoi WHERE idnguoidung = ${idnguoidung} AND idphim = ${idphim}`);
+            res.status(200).json({ result: true });
+        } catch (error) {
+            console.log("API error deleteTheoDoi: ", error);
+            res.status(500).json(error);
+        }
+    },
+
+    kiemTraTheoDoi: async (req, res) => {
+        try {
+            const { idnguoidung, idphim } = req.body;
+            const result1 = await database.query(`SELECT * FROM theodoi WHERE idnguoidung = ${idnguoidung} AND idphim = ${idphim}`);
+            if (result1.rows[0]) {
+                res.status(200).json({ result: true });
+            } else {
+                res.status(200).json({ result: false });
+            }
+        } catch (error) {
+            console.log("API error kiemTraTheoDoi: ", error);
+            res.status(500).json(error);
+        }
+    },
+
+    addBinhLuan: async (req, res) => {
+        try {
+            const { idnguoidung, idphim, noidung } = req.body;
+            await database.query(`INSERT INTO binhluan (idnguoidung, idphim, noidung, ngaybinhluan) VALUES (${idnguoidung}, ${idphim}, '${noidung}', now())`);
+            res.status(200).json({ result: true });
+        } catch (error) {
+            console.log("API error addBinhLuan: ", error);
+            res.status(500).json(error);
+        }
+    },
+
+    getListBinhLuanByIdPhim: async (req, res) => {
+        try {
+            const idPhim = req.params.idPhim;
+            const result1 = await database.query(`SELECT binhluan.*, nguoidung.tennguoidung, nguoidung.avatar FROM binhluan left JOIN phim ON binhluan.idphim = phim.id left JOIN nguoidung ON binhluan.idnguoidung = nguoidung.id where idphim = ${idPhim} ORDER BY binhluan.ngaybinhluan DESC`);
+            if (result1.rows[0]) {
+                res.status(200).json({ result: true, data: result1.rows });
+            } else {
+                res.status(200).json({ result: false, data: [] });
+            }
+        } catch (error) {
+            console.log("API error getListBinhLuanByIdPhim: ", error);
+            res.status(500).json(error);
+        }
+    },
 }
 module.exports = apiController;

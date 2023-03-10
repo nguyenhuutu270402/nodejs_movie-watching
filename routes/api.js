@@ -23,6 +23,20 @@ router.post('/update-user', apiController.updateUser);
 
 router.post('/update-password-user', apiController.updatePasswordUser);
 
-router.get('/get-one-phim-by-id/:id', apiController.getOnePhimById);
+router.get('/get-one-phim-by-id/:id/:idNguoiDung', apiController.getOnePhimById);
+
+router.post('/add-luot-xem', apiController.addLuotXem);
+
+router.post('/add-danh-gia', apiController.addDanhGia);
+
+router.post('/add-theo-doi', apiController.addTheoDoi);
+
+router.post('/kiem-tra-theo-doi', apiController.kiemTraTheoDoi);
+
+router.post('/delete-theo-doi', apiController.deleteTheoDoi);
+
+router.get('/get-list-binh-luan-theo-id-phim/:idPhim', apiController.getListBinhLuanByIdPhim);
+
+router.post('/add-binh-luan', apiController.addBinhLuan);
 
 module.exports = router;
