@@ -4,7 +4,7 @@ const apiController = {
     /// test
     getTessst: async (req, res) => {
         try {
-            const qr = `select * from binhluan`;
+            const qr = `select * from lichsu`;
             const result1 = await database.query(qr);
             console.log(result1);
             res.status(200).json(result1);
@@ -314,10 +314,74 @@ const apiController = {
             if (result1.rows[0]) {
                 res.status(200).json({ result: true, data: result1.rows });
             } else {
-                res.status(200).json({ result: false, data: [] });
+                res.status(200).json({ result: true, data: [] });
             }
         } catch (error) {
             console.log("API error getListBinhLuanByIdPhim: ", error);
+            res.status(500).json(error);
+        }
+    },
+
+    getListLichSuTheoIdNguoiDung: async (req, res) => {
+        try {
+            const idNguoiDung = req.params.idNguoiDung;
+
+            // const result1 = await database.query(`
+
+            // select tap.tentap, lichsu.*
+            // from lichsu
+            // LEFT JOIN tap ON lichsu.idtap = tap.id
+            // `);
+
+            const result1 = await database.query(`
+                SELECT 
+                phim.id,
+                phim.tenphim, 
+                phim.image,
+                tap.tentap as tentap_lichsu,
+                CASE 
+                    WHEN phim.dinhdang > 1 AND phim.phan > 0 THEN CONCAT('Season ', phim.phan::text)
+                    WHEN phim.chatluong = 1 THEN 'SD'
+                    ELSE 'HD'
+                END AS phan_hoac_chatluong
+            FROM lichsu
+            LEFT JOIN phim ON lichsu.idphim = phim.id
+            LEFT JOIN tap ON lichsu.idtap = tap.id
+            WHERE lichsu.idnguoidung = ${idNguoiDung}
+            GROUP BY lichsu.idphim, phim.id, tap.id
+            ORDER BY max(lichsu.ngayxemgannhat) DESC
+              `);
+
+            res.status(200).json({ data: result1.rows });
+        } catch (error) {
+            console.log("API error getListLichSuTheoIdNguoiDung: ", error);
+            res.status(500).json(error);
+        }
+    },
+
+    addLichSu: async (req, res) => {
+        try {
+            const { idnguoidung, idphim, idtap } = req.body;
+            const result1 = await database.query(`SELECT * FROM lichsu WHERE idnguoidung = ${idnguoidung} AND idphim = ${idphim}`);
+            if (result1.rows[0]) {
+                await database.query(`UPDATE lichsu SET idtap = ${idtap}, ngayxemgannhat = now() WHERE idnguoidung = ${idnguoidung} AND idphim = ${idphim}`);
+            } else {
+                await database.query(`INSERT INTO lichsu (idnguoidung, idphim, idtap, ngayxemgannhat) VALUES (${idnguoidung}, ${idphim}, ${idtap}, now())`);
+            }
+            res.status(200).json({ result: true, test: result1 });
+        } catch (error) {
+            console.log("API error addLichSu: ", error);
+            res.status(500).json(error);
+        }
+    },
+
+    deleteLichSu: async (req, res) => {
+        try {
+            const { idnguoidung, idphim } = req.body;
+            await database.query(`DELETE FROM lichsu WHERE idnguoidung = ${idnguoidung} AND idphim = ${idphim}`);
+            res.status(200).json({ result: true });
+        } catch (error) {
+            console.log("API error deleteLichSu: ", error);
             res.status(500).json(error);
         }
     },

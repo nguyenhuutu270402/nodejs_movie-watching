@@ -39,4 +39,11 @@ router.get('/get-list-binh-luan-theo-id-phim/:idPhim', apiController.getListBinh
 
 router.post('/add-binh-luan', apiController.addBinhLuan);
 
+router.get('/get-list-lich-su-theo-id-nguoi-dung/:idNguoiDung', apiController.getListLichSuTheoIdNguoiDung);
+
+router.post('/add-lich-su', apiController.addLichSu);
+
+router.post('/delete-lich-su', apiController.deleteLichSu);
+
+
 module.exports = router;
