@@ -323,7 +323,6 @@ const controller = {
                     res.status(500).json({ message: err.message });
                 } else {
                     res.redirect('/dien-vien');
-                    console.log("add neffff: ", results);
                 }
             });
         } catch (error) {
@@ -708,7 +707,7 @@ const controller = {
                 }
             }
             for (let i = 0; i < listDangPhim.length; i++) {
-                if (listDangPhim[i].value === phim.dangphim) {
+                if (listDangPhim[i].value === phim.dinhdang) {
                     listDangPhim[i].selected = true;
                 }
             }

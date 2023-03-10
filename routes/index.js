@@ -83,10 +83,10 @@ router.post('/post-add-phim', [authentication.checkLogin, upload.single('image')
     const [url] = await firebaseFile.getSignedUrl({ action: 'read', expires: '01-01-2500' });
 
     // them phim
-    const { tenphim, tenkhac, mota, namphathanh, dinhdang, sotap, chatluong, thoiluong, daodiens, dienviens, quocgias, theloais } = req.body;
+    const { tenphim, tenkhac, mota, namphathanh, dinhdang, sotap, chatluong, thoiluong, phan, daodiens, dienviens, quocgias, theloais } = req.body;
     const result1 = await database.query(`
-    INSERT INTO phim (tenphim, tenkhac, trangthai, mota, image, namphathanh, sotap, chatluong, thoiluong, dinhdang) 
-    VALUES ('${tenphim}', '${tenkhac}', 1, '${mota}', '${url}', ${namphathanh}, ${sotap}, ${chatluong}, ${thoiluong}, ${dinhdang}) returning *`);
+    INSERT INTO phim (tenphim, tenkhac, trangthai, mota, image, namphathanh, sotap, chatluong, thoiluong, dinhdang, phan) 
+    VALUES ('${tenphim}', '${tenkhac}', 1, '${mota}', '${url}', ${namphathanh}, ${sotap}, ${chatluong}, ${thoiluong}, ${dinhdang}, ${phan}) returning *`);
     const idphim = result1.rows[0].id;
 
     // tại vì nếu list id trả về chỉ có 1 phần tử nên nó tự biến thành số. nên cần kiểm tra xem nó có phải là số hay không để thêm dữ liệu vào
@@ -133,9 +133,9 @@ router.post('/post-update-phim', [authentication.checkLogin, upload.single('imag
     // kiểm tra xem có đổi ảnh hay không
     if (req.file == undefined) {
       // sửa phim
-      const { id, tenphim, tenkhac, mota, namphathanh, dinhdang, sotap, chatluong, thoiluong, trangthai, daodiens, dienviens, quocgias, theloais } = req.body;
+      const { id, tenphim, tenkhac, mota, namphathanh, dinhdang, sotap, chatluong, thoiluong, trangthai, phan, daodiens, dienviens, quocgias, theloais } = req.body;
       await database.query(`UPDATE phim
-      SET tenphim = '${tenphim}', tenkhac = '${tenkhac}', mota = '${mota}', namphathanh = ${namphathanh}, dinhdang = ${dinhdang}, sotap = ${sotap}, chatluong = ${chatluong}, thoiluong = ${thoiluong}, trangthai = ${trangthai}
+      SET tenphim = '${tenphim}', tenkhac = '${tenkhac}', mota = '${mota}', namphathanh = ${namphathanh}, dinhdang = ${dinhdang}, sotap = ${sotap}, chatluong = ${chatluong}, thoiluong = ${thoiluong}, trangthai = ${trangthai}, phan = ${phan}
       WHERE id = ${id}`);
 
       // xóa đi các chi tiết cũ và insert cái mới
@@ -195,7 +195,7 @@ router.post('/post-update-phim', [authentication.checkLogin, upload.single('imag
       const [url] = await firebaseFile.getSignedUrl({ action: 'read', expires: '01-01-2500' });
 
       // xóa đi ảnh cũ
-      const { id, tenphim, tenkhac, mota, namphathanh, dinhdang, sotap, chatluong, thoiluong, trangthai, daodiens, dienviens, quocgias, theloais } = req.body;
+      const { id, tenphim, tenkhac, mota, namphathanh, dinhdang, sotap, chatluong, thoiluong, trangthai, phan, daodiens, dienviens, quocgias, theloais } = req.body;
       const result = await database.query(`select * from phim WHERE id = ${id}`);
 
       const fileUrl = result.rows[0].image;
@@ -212,7 +212,7 @@ router.post('/post-update-phim', [authentication.checkLogin, upload.single('imag
       // sửa phim
       await database.query(`UPDATE phim
               SET tenphim = '${tenphim}', tenkhac = '${tenkhac}', mota = '${mota}', namphathanh = ${namphathanh}, 
-              dinhdang = ${dinhdang}, sotap = ${sotap}, chatluong = ${chatluong}, thoiluong = ${thoiluong}, trangthai = ${trangthai}, image = '${url}'
+              dinhdang = ${dinhdang}, sotap = ${sotap}, chatluong = ${chatluong}, thoiluong = ${thoiluong}, trangthai = ${trangthai}, phan = ${phan}, image = '${url}'
               WHERE id = ${id}`);
 
       // xóa đi các chi tiết cũ và insert cái mới
