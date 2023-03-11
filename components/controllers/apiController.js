@@ -4,7 +4,7 @@ const apiController = {
     /// test
     getTessst: async (req, res) => {
         try {
-            const qr = `select * from lichsu`;
+            const qr = `select * from nguoidung`;
             const result1 = await database.query(qr);
             console.log(result1);
             res.status(200).json(result1);
@@ -25,7 +25,7 @@ const apiController = {
                 // email da dang ky
                 res.status(200).json({ result: false });
             } else {
-                await database.query(`INSERT INTO nguoidung (email, matkhau, tennguoidung, phanquyen) VALUES ('${email}', '${matkhau}', '', 1)`);
+                await database.query(`INSERT INTO nguoidung (email, matkhau, tennguoidung, phanquyen, avatar) VALUES ('${email}', '${matkhau}', '', 1, '')`);
                 res.status(200).json({ result: true });
             }
         } catch (error) {
@@ -37,7 +37,7 @@ const apiController = {
     loginUser: async (req, res) => {
         try {
             const { email, matkhau } = req.body;
-            const result1 = await database.query(`SELECT * FROM nguoidung WHERE email = '${email}' 0`);
+            const result1 = await database.query(`SELECT * FROM nguoidung WHERE email = '${email}'`);
             if (result1.rows.length > 0) {
                 if (matkhau === result1.rows[0].matkhau) {
                     res.status(200).json({ result: true, data: result1.rows[0] });
