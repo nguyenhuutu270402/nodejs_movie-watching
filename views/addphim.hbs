@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Comic Reading</title>
+    <title>Movie Watching</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
@@ -25,7 +25,6 @@
         h2 {
             text-align: center;
             color: #333;
-            margin-bottom: 30px;
         }
 
         form {
@@ -87,7 +86,12 @@
 
         .mgb {
             margin-bottom: 20px;
-            background-color: rgba(0, 0, 0, 0.2);
+        }
+
+        img {
+            width: 100px;
+            height: 150px;
+            object-fit: cover;
         }
     </style>
 </head>
@@ -97,9 +101,8 @@
     <div class="body_index2">
         <div class="header_index2">
             <div class="headr_logo">
-                <img
-                    src="https://yt3.googleusercontent.com/ytc/AL5GRJWNFkKQnRDA04U8Kwp6hryPKEVdskQzvWAtLs1X=s900-c-k-c0x00ffffff-no-rj" />
-                <h2>Comic Reading</h2>
+                <img src="https://icon-library.com/images/free-movies-icon/free-movies-icon-16.jpg" />
+                <h2>Movie Watching</h2>
             </div>
             <div class="header_account">
                 <img src="{{user.avatar}}" />
@@ -133,6 +136,7 @@
 
         <div class="container">
             <h2>Thêm phim</h2>
+            <div class="mgb"></div>
             <form action="/post-add-phim" method="post" enctype="multipart/form-data">
                 <label for="tenphim">Tên phim:</label>
                 <input type="text" id="tenphim" name="tenphim" required>
