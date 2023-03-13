@@ -4,7 +4,7 @@ const apiController = {
     /// test
     getTessst: async (req, res) => {
         try {
-            const qr = `select * from nguoidung`;
+            const qr = `select * from binhluan`;
             const result1 = await database.query(qr);
             console.log(result1);
             res.status(200).json(result1);
@@ -165,6 +165,7 @@ const apiController = {
             COUNT(DISTINCT luotxem.id) AS tongluotxem,
             COUNT(DISTINCT theodoi.id) AS tongtheodoi,
             COUNT(DISTINCT danhgia.id) AS tongdanhgia,
+            COUNT(DISTINCT binhluan.id) AS tongbinhluan,
             AVG(danhgia.sosao)sosaotrungbinh, 
             MAX(tap.ngaycapnhat) AS ngaycapnhat,
             (
@@ -185,6 +186,7 @@ const apiController = {
                     FROM ct_daodien 
                     INNER JOIN daodien ON daodien.id = ct_daodien.iddaodien
                     WHERE ct_daodien.idphim = phim.id 
+                    ORDER BY daodien.tendaodien
                 ) AS daodien_info
             ) AS ds_daodien,
             (
@@ -194,7 +196,7 @@ const apiController = {
                     FROM ct_dienvien
                     INNER JOIN dienvien ON dienvien.id = ct_dienvien.iddienvien
                     WHERE ct_dienvien.idphim = phim.id 
-                    ORDER BY ct_dienvien.id
+                    ORDER BY dienvien.tendienvien
                 ) AS dienvien_info
             ) AS ds_dienvien,
             (
@@ -222,6 +224,7 @@ const apiController = {
         LEFT JOIN luotxem ON luotxem.idtap = tap.id
         LEFT JOIN theodoi ON theodoi.idphim = phim.id
         LEFT JOIN danhgia ON danhgia.idphim = phim.id
+        LEFT JOIN binhluan ON binhluan.idphim = phim.id
         WHERE phim.id = ${id}
         GROUP BY phim.id;
             `);
@@ -382,6 +385,36 @@ const apiController = {
             res.status(200).json({ result: true });
         } catch (error) {
             console.log("API error deleteLichSu: ", error);
+            res.status(500).json(error);
+        }
+    },
+    getOneTapById: async (req, res) => {
+        try {
+            const idTap = req.params.idTap;
+            const idPhim = req.params.idPhim;
+            const idNguoiDung = req.params.idNguoiDung;
+            const result1 = await database.query(`
+                SELECT 
+                    tap.*, 
+                    phim.tenphim,
+                    (
+                        SELECT json_agg(tap_info) 
+                        FROM (
+                            SELECT tap.id, tap.tentap, tap.tapso, luotxem.idnguoidung AS idnguoidung_da_xem
+                            FROM tap 
+                            LEFT JOIN luotxem ON tap.id = luotxem.idtap AND luotxem.idnguoidung = ${idNguoiDung}
+                            WHERE tap.idphim = ${idPhim}
+                            GROUP BY tap.id, luotxem.idnguoidung
+                            ORDER BY tapso DESC
+                        ) AS tap_info
+                    ) AS ds_tap
+                FROM tap
+                LEFT JOIN phim ON phim.id = tap.idphim 
+                WHERE tap.id = ${idTap}
+            `);
+            res.status(200).json({ result: true, data: result1.rows[0] });
+        } catch (error) {
+            console.log("API error getOneTapById: ", error);
             res.status(500).json(error);
         }
     },

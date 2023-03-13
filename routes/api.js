@@ -45,5 +45,6 @@ router.post('/add-lich-su', apiController.addLichSu);
 
 router.post('/delete-lich-su', apiController.deleteLichSu);
 
+router.get('/get-one-tap-by-id/:idTap/:idPhim/:idNguoiDung', apiController.getOneTapById);
 
 module.exports = router;
