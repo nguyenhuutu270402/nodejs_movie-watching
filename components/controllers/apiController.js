@@ -418,5 +418,44 @@ const apiController = {
             res.status(500).json(error);
         }
     },
+
+    getPhimTheoLoai: async (req, res) => {
+        try {
+            let qr = `
+        SELECT 
+            phim.id,
+            phim.tenphim, 
+            phim.image,
+            CASE 
+                WHEN phim.dinhdang > 1 AND phim.phan > 0 THEN CONCAT('Season ', phim.phan::text)
+                WHEN phim.chatluong = 1 THEN 'SD'
+                ELSE 'HD'
+            END AS phan_hoac_chatluong,
+            CASE 
+                WHEN trangthai = 2 AND dinhdang = 2 
+                    THEN CONCAT('Full (', MAX(tap.tapso)::text, '/', phim.sotap::text, ')')
+                ELSE (
+                    SELECT tentap 
+                    FROM tap 
+                    WHERE tap.tapso = (
+                        SELECT MAX(tap.tapso) 
+                        FROM tap 
+                        WHERE tap.idphim = phim.id
+                    )
+                    AND tap.idphim = phim.id
+                )
+            END AS thong_tin_tap
+        FROM phim
+        LEFT JOIN tap ON phim.id = tap.idphim ${req.body.qrMidle} 
+        GROUP BY phim.id, phim.tenphim, phim.image, phim.sotap
+        ORDER BY MAX(tap.ngaycapnhat) desc`
+            const result1 = await database.query(qr);
+
+            res.status(200).json({ data: result1.rows });
+        } catch (error) {
+            console.log("API error getAllPhim: ", error);
+            res.status(500).json(error);
+        }
+    },
 }
 module.exports = apiController;
