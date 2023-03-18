@@ -48,4 +48,7 @@ router.post('/delete-lich-su', apiController.deleteLichSu);
 router.get('/get-one-tap-by-id/:idTap/:idPhim/:idNguoiDung', apiController.getOneTapById);
 
 router.post('/list-phim-theo-loai', apiController.getPhimTheoLoai);
+
+router.post('/list-phim-xep-hang', apiController.getPhimXepHang);
+
 module.exports = router;
