@@ -123,6 +123,7 @@ const apiController = {
             SELECT 
             phim.id,
             phim.tenphim, 
+            phim.tenkhac,
             phim.image,
             CASE 
                 WHEN phim.dinhdang > 1 AND phim.phan > 0 THEN CONCAT('Season ', phim.phan::text)
@@ -162,6 +163,7 @@ const apiController = {
             SELECT 
             phim.id,
             phim.tenphim, 
+            phim.tenkhac,
             phim.image,
             COUNT(DISTINCT luotxem.id) AS tongluotxem,
             CASE 
